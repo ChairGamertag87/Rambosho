@@ -1,0 +1,8 @@
+name: rambosho
+version: '1.0.1'
+main: fr.chairgamertag87.rambosho.Rambosho
+api-version: '1.21'
+commands:
+  ppc:
+    description: Joue à Pierre, Papier, Ciseaux.
+    usage: /ppc
