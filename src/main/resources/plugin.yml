@@ -4,5 +4,8 @@ main: fr.chairgamertag87.rambosho.Rambosho
 api-version: '1.21'
 commands:
   ppc:
-    description: Joue à Pierre, Papier, Ciseaux.
-    usage: /ppc
+    description: Lance une invitation pour jouer à Pierre-Papier-Ciseaux.
+    usage: /ppc <joueur>
+  ppcaccept:
+    description: Accepte une invitation pour jouer à Pierre-Papier-Ciseaux.
+    usage: /ppcaccept <joueur>
