@@ -1,42 +1,56 @@
 package fr.chairgamertag87.rambosho;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class PPCCommand implements CommandExecutor {
 
+    public PPCCommand(PPCGUIManager guiManager) {
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-
-            Inventory gui = Bukkit.createInventory(null, 9, "Pierre Papier Ciseaux");
-            gui.setItem(2, createGuiItem(Material.STONE, "§aPierre"));
-            gui.setItem(4, createGuiItem(Material.PAPER, "§bPapier"));
-            gui.setItem(6, createGuiItem(Material.SHEARS, "§cCiseaux"));
-
-            player.openInventory(gui);
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("Seuls les joueurs peuvent utiliser cette commande !");
             return true;
         }
 
-        sender.sendMessage("Seuls les joueurs peuvent exécuter cette commande.");
-        return true;
-    }
+        Player senderPlayer = (Player) sender;
 
-    private ItemStack createGuiItem(Material material, String name) {
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(name);
-            item.setItemMeta(meta);
+        if (args.length != 1) {
+            senderPlayer.sendMessage("§eUtilisation : /ppc <nom_du_joueur>");
+            return true;
         }
-        return item;
+
+        Player targetPlayer = Bukkit.getPlayer(args[0]);
+
+        if (targetPlayer == null || !targetPlayer.isOnline()) {
+            senderPlayer.sendMessage("§cLe joueur " + args[0] + " n'est pas en ligne !");
+            return true;
+        }
+
+        if (targetPlayer.equals(senderPlayer)) {
+            senderPlayer.sendMessage("§cVous ne pouvez pas vous inviter vous-même !");
+            return true;
+        }
+
+        Component invitationMessage = Component.text("§a" + senderPlayer.getName() + " vous invite à jouer à Pierre-Papier-Ciseaux ! ")
+                .append(Component.text("§e[Accepter]")
+                        .hoverEvent(HoverEvent.showText(Component.text("Cliquez pour accepter l'invitation !")))
+                        .clickEvent(ClickEvent.runCommand("/ppcaccept " + senderPlayer.getName())));
+
+        targetPlayer.sendMessage(invitationMessage);
+
+        senderPlayer.sendMessage("§aInvitation envoyée à " + targetPlayer.getName() + " !");
+        senderPlayer.playSound(senderPlayer.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.5f);
+
+        return true;
     }
 }

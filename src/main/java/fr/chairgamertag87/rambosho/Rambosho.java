@@ -1,24 +1,27 @@
 package fr.chairgamertag87.rambosho;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Objects;
+public class Rambosho extends JavaPlugin {
 
-public final class Rambosho extends JavaPlugin {
+    private static Rambosho instance;
 
     @Override
     public void onEnable() {
-        getLogger().info("PierrePapierCiseaux est activé !");
+        PPCGUIManager guiManager = new PPCGUIManager();
 
-        getCommand("ppc").setExecutor(new PPCCommand());
+        getServer().getPluginManager().registerEvents(new PPCEventListener(guiManager), this);
 
-        Bukkit.getPluginManager().registerEvents(new PPCEventListener(), this);
+        getCommand("ppc").setExecutor(new PPCCommand(guiManager));
+        getCommand("ppcaccept").setExecutor(new PPCAcceptCommand(guiManager));
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("PierrePapierCiseaux est désactivé !");
+        getLogger().info("Plugin Rambosho désactivé !");
     }
 
+    public static Rambosho getInstance() {
+        return instance;
+    }
 }
