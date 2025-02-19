@@ -1,3 +1,5 @@
+![Rambosho](Rambosho.png)
+
 # **Rambosho - Plugin Minecraft**
 
 Un plugin simple pour jouer au célèbre jeu "Pierre, Papier, Ciseaux" directement dans Minecraft !
